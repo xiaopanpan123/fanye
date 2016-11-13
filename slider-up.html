@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slider</title>
+    <style type="text/css">
+        body, p, img, dl, dt, dd, ul, ol, h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            position: relative;
+            font: 12px/1.5 Simsun, Arial;
+            color: #666;
+            text-align: left;
+            background: #000;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        img {
+            border: 0 none;
+        }
+
+        input, select {
+            vertical-align: middle;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        s, em, i {
+            font-style: normal;
+            text-decoration: none;
+        }
+
+        a {
+            outline: none;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .clear {
+            *zoom: 1;
+        }
+
+        .clear:after {
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+            zoom: 1;
+        }
+
+        .slideBox {
+            position: relative;
+            width: 640px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .slideBox ul.items {
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            width: 640px;
+            height: 8000px;
+        }
+
+        .slideBox ul.items li {
+            padding: 0;
+            margin: 0;
+            width: 640px;
+            height: 300px;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 150px;
+        }
+
+        .arrow .you {
+            position: absolute;
+            left: 50px;
+        }
+
+        .arrow .zuo {
+            position: absolute;
+            left: 567px;
+        }
+        /*.circle{*/
+            /*position: absolute;*/
+            /*top: 250px;*/
+            /*left: 300px;*/
+        /*}*/
+        /*.circle li{*/
+            /*height: 10px;*/
+            /*width: 10px;*/
+            /*margin: 3px;*/
+            /*background-color: #ffffff;*/
+            /*border-radius: 50%;*/
+                /*}*/
+        /*.circle .liang{*/
+            /*background-color: black;*/
+        /*}*/
+    </style>
+</head>
+<body>
+
+<div id="slide" class="slideBox">
+    <ul class="items J_items">
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/1.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/2.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/3.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/4.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/5.jpg">
+            </a>
+        </li>
+    </ul>
+    <div class="arrow">
+        <a href="javascript:;" target="_self" class="you J_zuo"><img src="img/sprite-arrow-prev.png" alt=""/></a>
+        <a href="javascript:;" target="_self" class="zuo J_you"><img src="img/sprite-arrow-next.png" alt=""/></a>
+    </div>
+
+        <!--<ul class="circle">-->
+            <!--<li></li>-->
+            <!--<li></li>-->
+            <!--<li></li>-->
+            <!--<li></li>-->
+            <!--<li></li>-->
+        <!--</ul>-->
+
+</div>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+    $(function () {
+        var $slide = $('#slide'),
+                $items = $slide.find('.J_items'),
+                $li = $items.find('li'),
+                $arrowzuo = $slide.find('.J_zuo'),
+                $arrowyou = $slide.find('.J_you'),
+                $circle=$slide.find('.circle'),
+                $circleli=$circle.find('li'),
+                index = 0;
+
+        var $first = $li.eq(0).clone();
+        var $last = $li.eq($li.length - 1).clone();
+
+        console.log($circleli);
+        $items.append($first);
+        $items.prepend($last);
+
+        $li = $items.find('li');
+
+        index = 1;
+        $items.animate({top: -1 * $li.height()});
+
+        $arrowzuo.click(function () {
+            move('up');
+
+        });
+        $arrowyou.click(function () {
+            move('down');
+        });
+
+        setInterval(function(){
+            move('down');
+        },2000)
+        function move(direction){
+
+            direction=='up'? index--:index++;
+            console.log(index);
+
+            $items.animate({top: -index * $li.height()}, function () {
+                if (index == $li.length - 1) {
+                    index = 1;
+
+                };
+                if (index == 0) {
+                    index = $li.length - 2;
+                };
+                $items.css('top', -index * $li.height());
+
+
+            });
+        }
+    });
+
+</script>
+</div>
+
+</body>
+</html>

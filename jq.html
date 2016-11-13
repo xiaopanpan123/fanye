@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<ul>
+    <li>
+        <button>按钮</button>
+        <button>按钮</button>
+        <button>按钮</button>
+    </li>
+    <li>
+        <button>按钮</button>
+        <button>按钮</button>
+        <button>按钮</button>
+    </li>
+    <li>
+        <button>按钮</button>
+        <button>按钮</button>
+        <button>按钮</button>
+    </li>
+</ul>
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+
+//    $('#d1').css('background', '#f0f');
+//    var $d2 = $('<div>hello 2</div>');
+//
+//    $d2.css('background', '#ff0');
+//    $('body').append($d2);
+
+//    $('body').append('<button>按钮</button>').click(function(){
+//        alert('nihao');
+//    });
+
+//$('body').append('<button>按钮</button>').mouseenter(function(){
+//    alert('nihao');
+//});
+
+//    var $btn =$('button');
+//    $('body').append($btn);
+//    $btn.click(function(e){
+//        e.preventDefault();
+//    })
+
+    $('button').click(function(){
+        var html;
+        var $this=$(this);
+        var hangIndex=$this.index()+1;
+        var $lis=$this.parent();
+        var liIndex=$lis.index()+1;
+        html="第"+liIndex+'行，第'+hangIndex+'个';
+       alert(html);
+    })
+</script>
+</body>
+</html>

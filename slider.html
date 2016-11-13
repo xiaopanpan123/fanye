@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slider</title>
+    <style type="text/css">
+        body, p, img, dl, dt, dd, ul, ol, h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            position: relative;
+            font: 12px/1.5 Simsun, Arial;
+            color: #666;
+            text-align: left;
+            background: #000;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        img {
+            border: 0 none;
+        }
+
+        input, select {
+            vertical-align: middle;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        s, em, i {
+            font-style: normal;
+            text-decoration: none;
+        }
+
+        a {
+            outline: none;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .clear {
+            *zoom: 1;
+        }
+
+        .clear:after {
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+            zoom: 1;
+        }
+
+        .slideBox {
+            position: relative;
+            width: 640px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .slideBox ul.items {
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            width: 8000px;
+            height: 300px;
+        }
+
+        .slideBox ul.items li {
+            float: left;
+            padding: 0;
+            margin: 0;
+            width: 640px;
+            height: 300px;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 150px;
+        }
+
+        .arrow .you {
+            position: absolute;
+            left: 50px;
+        }
+
+        .arrow .zuo {
+            position: absolute;
+            left: 567px;
+        }
+
+        .circle {
+            display: none;
+            position: absolute;
+            top: 250px;
+            left: 300px;
+        }
+
+        .circle li {
+            float: left;
+            height: 10px;
+            width: 10px;
+            margin: 3px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+
+        .circle .liang {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="slide" class="slideBox">
+    <ul class="items J_items">
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/1.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/2.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/3.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/4.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="#" target="_blank">
+                <img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/5.jpg">
+            </a>
+        </li>
+    </ul>
+    <div class="arrow">
+        <a href="javascript:;" target="_self" class="you J_zuo"><img src="img/sprite-arrow-prev.png" alt=""/></a>
+        <a href="javascript:;" target="_self" class="zuo J_you"><img src="img/sprite-arrow-next.png" alt=""/></a>
+    </div>
+
+    <ul class="circle">
+        <li class="liang"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+</div>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+    var Slide = function ($target, opts) {
+        this.init($target, opts);//构造函数中，主动调用init方法；
+    };
+    Slide.prototype = {//给原生增加方法
+        init: function ($target, opts) {
+            var me = this;
+            me.opts = opts;
+            me.$slide = $target;
+            me.$items = me.$slide.find(opts.J_items);
+            me.$li = me.$items.find('li');
+            me.$arrowzuo = me.$slide.find(opts.J_zuo);
+            me.$arrowyou = me.$slide.find(opts.J_you);
+            me.$circle = me.$slide.find('.circle');
+            me.$circleli = me.$circle.find('li');
+            me.index = 0;
+            me.isAnimate = false;
+            if (opts.autoLock != true) {
+                me.$first = me.$li.eq(0).clone();
+                me.$last = me.$li.eq(me.$li.length - 1).clone();
+                console.log(me.$circleli);
+                me.$items.append(me.$first);
+                me.$items.prepend(me.$last);
+                me.index = opts.defaultPage+1;
+            } else {
+                me.index = opts.defaultPage;
+                if (me.index == 0) {
+                    me.$arrowzuo.hide();
+                }
+                if (me.index == me.$li.length - 1) {
+                    me.$arrowyou.hide();
+                }
+                ;
+
+            }
+            ;
+
+            if (me.opts.needDots) {
+                me.$circle.css('display', 'block');
+                me.appendDots();
+            }
+            ;
+
+            me.$li = me.$items.find('li');
+
+            me.index = 1;
+            me.$items.css({left: -1 * me.$li.width()});
+            me.addEvents();//调用增加的时间的方法；
+//            me.autoPlay(opts);
+
+        },
+        autoPlay: function () {
+            var me = this;
+            if (me.opts.autoPlay) {
+                if(me.index==0){
+                    me.index = me.$li.length - 2;
+                }
+                if(me.index==me.$li.length - 1){
+                    me.index==0;
+                }
+                setInterval(function () {
+                    me.move('right');
+                }, 2000)
+            }
+
+        },
+        addEvents: function () {//增加时间的方法;
+            var me = this;//防止和点击this冲突，做成全局变量，有function的地方都需要这样做
+            me.$arrowzuo.click(function () {
+                me.move('left');
+
+            });
+            me.$arrowyou.click(function () {
+                me.move('right');
+            });
+
+
+        },
+
+        move: function (direction) {
+            var me = this;
+            direction == 'left' ? me.index-- : me.index++;//传入的参数不用this
+
+            me.$items.animate({left: -me.index * me.$li.width()}, function () {
+                me.isAnimate = false;
+                if (me.opts.autoLock != true) {
+                    if (me.index == me.$li.length - 1) {
+                        me.index = 1;
+                    }
+                    else if (me.index == 0) {
+                        me.index = me.$li.length - 2;
+                    }
+                    me.$items.css('left', -me.index * me.$li.width());
+                    me.$circleli.removeClass('liang');
+                    me.$circleli.eq(me.index - 1).addClass('liang');
+                }
+                else {
+                    if (me.index == me.$li.length - 1) {
+                        me.$arrowyou.hide();
+                    }
+                    else if (me.index == 0) {
+                        me.$arrowzuo.hide();
+                    }
+                    if (me.index == me.$li.length - 1) {
+                        me.$arrowyou.hide();
+                    } else {
+                        me.$arrowyou.show();
+                    }
+                    if (me.index == 0) {
+                        me.$arrowzuo.hide();
+                    } else {
+                        me.$arrowzuo.show();
+                    }
+                }
+                me.$circleli.removeClass('liang');
+                me.$circleli.eq(me.index-1).addClass('liang');
+            });
+
+        },
+        appendDots: function () {
+            var me = this;
+            me.$circleli.click(function () {
+                        me.$circleli.removeClass('liang');
+                        var index = $(this).index();
+                        console.log(index);
+                        me.$circleli.eq(index).addClass('liang');
+                        me.$items.css('left', -index * me.$li.width());
+                        me.index = index;
+                    }
+            )
+        }
+
+    };
+    var $target = $('#slide');
+    var slide = new Slide($target, {
+        J_items: '.J_items',
+        J_zuo: '.J_zuo',
+        J_you: '.J_you',
+        autoPlay: true,
+        defaultPage:0,
+        needDots: true,
+        autoLock: true
+
+    });//new实例
+
+    //    $(function () {
+    //        var $slide = $('#slide'),
+    //                $items = $slide.find('.J_items'),
+    //                $li = $items.find('li'),
+    //                $arrowzuo = $slide.find('.J_zuo'),
+    //                $arrowyou = $slide.find('.J_you'),
+    //                $circle = $slide.find('.circle'),
+    //                $circleli = $circle.find('li'),
+    //                index = 0;
+    //
+    //        var $first = $li.eq(0).clone();
+    //        var $last = $li.eq($li.length - 1).clone();
+    //
+    //        console.log($circleli);
+    //        $items.append($first);
+    //        $items.prepend($last);
+    //
+    //        $li = $items.find('li');
+    //
+    //        index = 1;
+    //        $items.animate({left: -1 * $li.width()});
+    //
+    //        $arrowzuo.click(function () {
+    //            move('left');
+    //
+    //        });
+    //        $arrowyou.click(function () {
+    //            move('right');
+    //        });
+    //
+    //
+    ////        setInterval(function () {
+    ////            move('right');
+    ////        }, 2000)
+    //        function move(direction) {
+    //
+    //            direction == 'left' ? index-- : index++;
+    //            console.log(index);
+    //
+    //            $items.animate({left: -index * $li.width()}, function () {
+    //                if (index == $li.length - 1) {
+    //                    index = 1;
+    //
+    //                }
+    //                ;
+    //                if (index == 0) {
+    //                    index = $li.length - 2;
+    //                }
+    //                ;
+    //                $items.css('left', -index * $li.width());
+    //                $circleli.removeClass('liang');
+    //                $circleli.eq(index - 1).addClass('liang');
+    //
+    //
+    //            });
+    //        }
+    //    });
+
+</script>
+</div>
+
+</body>
+</html>

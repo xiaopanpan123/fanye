@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .box{
+           height: 0px;
+            width: 0px;
+            border-left: 200px #33ff0b solid;
+            border-right: 200px transparent solid;
+            border-top: 200px transparent solid;
+            border-bottom: 200px transparent solid;
+
+        }
+        .box .style{
+            transform: rotate(330deg) scale(1.2) translate(200px);
+            transform-origin: top center;
+            transition: 1s ease-in;
+            rotatez:20deg;
+            rotatey:20deg;
+            rotatex:20deg;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+</div>
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+     $('div').mouseover(function(){
+         $('div').css('transform','rotate(330deg) scale(1.2) translate(200px)').css('transform-origin','top center').css(
+                 'transition','1s ease-in'
+         );
+     })
+</script>
+</body>
+</html>
